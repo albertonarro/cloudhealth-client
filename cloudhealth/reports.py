@@ -1,43 +1,52 @@
-# https://chapi.cloudhealthtech.com/olap_reports?api_key=<your api key>
+from . import exceptions
 
-from cloudhealth import exceptions
+class ReportingClient():
 
-
-class ReportsClient(object):
     def __init__(self, client):
         self.client = client
+        self.uri = 'olap_reports'
 
-    def list(self, topic=None):
-        reports = []
+    def list(self, org_id=None):
+        uri = f'{self.uri}'
+        params = [('org_id', org_id)]
 
-        uri = '/olap_reports'
-        if topic:
-            uri = uri + '/{0}'.format(topic)
-        response = self.client.get(uri)
-        report_links = response['links']
-        for _, link_item in report_links.items():
-            reports.append(link_item['href'])
+        reports = self.client.query(uri, method='GET', params=params)
 
         return reports
 
-    def topics(self):
-        topics = []
 
-        reports = self.list()
-        for report in reports:
-            topic = report.split('/')[-1]
-            topics.append(topic)
+    def list_type(self, report_type, org_id=None):
+        uri = f'{self.uri}/{report_type}'
+        params = [('org_id', org_id)]
 
-        return topics
+        reports = self.client.query(uri, method='GET', params=params)
 
-    def get(self, id=None, topic=None, report_name=None):
-        if id:
-            uri = '/olap_reports/custom/{0}'.format(id)
-        elif topic and report_name:
-            uri = '/olap_reports/{0}/{1}'.format(topic, report_name)
-        else:
-            raise exceptions.CloudHealthError(
-                'Must either provide a report id or a topic and report-name')
+        return reports
 
-        report = self.client.get(uri)
-        return report
+
+    def get_data(self, report_type, report_id, dimensions=[], 
+            measures=[], interval='', filters=[], org_id='', collapse_null_arrays=True,
+            no_cache=True):
+        uri = f'{self.uri}/{report_type}/{report_id}'
+
+        params = [
+            *[('dimensions[]', v) for v in dimensions],
+            *[('measures[]', v) for v in measures],
+            *[('filters[]', v) for v in filters],
+            *[('interval', interval),
+              ('org_id', org_id),
+              ('collapse_null_arrays', 1 if collapse_null_arrays else 0),
+              ("NO_CACHE", 1 if no_cache else 0)]
+        ]
+
+        data = self.client.query(uri, method='GET', params=params)
+
+        return data
+
+    def get_dimensions(self, report_type, report_id, org_id=''):
+        uri = f'{self.uri}/{report_type}/{report_id}/new'
+        params = [('org_id', org_id)]
+
+        dimensions = self.client.query(uri, method='GET', params=params)
+
+        return dimensions

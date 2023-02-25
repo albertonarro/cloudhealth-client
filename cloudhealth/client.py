@@ -1,93 +1,61 @@
-########
-# Copyright (c) 2014 GigaSpaces Technologies Ltd. All rights reserved
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#        http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-#    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    * See the License for the specific language governing permissions and
-#    * limitations under the License.
-
 import requests
-from requests.packages import urllib3
+import os
 
-from .cost import CostClient
-from .usage import UsageClient
+from cloudhealth import exceptions
 from .assets import AssetsClient
-from .reports import ReportsClient
+from .reports import ReportingClient
+from .sso import SsoClient
 
-
-DEFAULT_CLOUDHEALTH_API_URL = 'https://chapi.cloudhealthtech.com/'
-
-urllib3.disable_warnings(urllib3.exceptions.InsecurePlatformWarning)
-
-
-class HTTPClient(object):
+class Client():
     def __init__(self,
                  endpoint,
-                 api_key,
-                 headers=None,
-                 query_params=None,
-                 cert=None,
-                 trust_all=False):
+                 api_key):
         self.endpoint = endpoint
         self.api_key = api_key
-        self.headers = headers.copy() if headers else {}
-        if not self.headers.get('Content-type'):
-            self.headers['Content-type'] = 'application/json'
+        self.headers = {
+            'Authorization': f'Bearer {self.api_key}',
+            'Accept': 'application/json'
+        }
 
-    def get(self,
+    def query(self,
             uri,
             data=None,
             params=None,
-            headers=None,
-            _include=None,
-            expected_status_code=200,
-            stream=False):
-        url = self.endpoint + uri + '?api_key={0}'.format(self.api_key)
-        response = requests.get(url,
-                                data=data,
-                                params=params,
-                                headers=headers,
-                                stream=stream)
-        if response.status_code != 200:
-            raise RuntimeError(
-                'Request to {0} failed! (HTTP Error Code: {1})'.format(
-                    url, response.status_code))
-        return response.json()
+            headers={},
+            method='GET'):
 
-    def get_asset(self,
-                  uri,
-                  asset,
-                  data=None,
-                  params=None,
-                  headers=None,
-                  _include=None,
-                  expected_status_code=200,
-                  stream=False):
-        url =  '{0}{1}?api_key={2}&name={3}'.format(self.endpoint,  uri, self.api_key, asset)
-        response = requests.get(url,
-                                data=data,
-                                params=params,
-                                headers=headers,
-                                stream=stream)
-        if response.status_code != 200:
-            raise RuntimeError(
-                    'Request to {0} failed! (HTTP Error Code: {1})'.format(
-                            url, response.status_code))
+        url = f'{self.endpoint}{uri}'
+
+        if len(url) >= 4000:
+            raise exceptions.CloudHealthError(
+                'The maximum permissible length of a URI string is 4000 characters.'
+            )
+
+        headers.update(self.headers)
+        
+        response = requests.request(
+            method,
+            url,
+            data=data,
+            params=params,
+            headers=headers)
+
+        if response.status_code not in [200, 201, 204]:
+            error = response.json().get('error')
+            raise exceptions.CloudHealthError(f'{response.status_code} - {error}')
+
         return response.json()
 
 
-class CloudHealth(object):
-    def __init__(self, api_key, endpoint=DEFAULT_CLOUDHEALTH_API_URL):
-        self._client = HTTPClient(endpoint, api_key)
+class CloudHealth():
+    def __init__(self, endpoint='https://chapi.cloudhealthtech.com/', api_key=None):
+        if not api_key:
+            try:
+                api_key = os.environ['CLOUDHEALTH_API_KEY']
+            except KeyError:
+                raise exceptions.CloudHealthError('API_KEY not set')
 
-        self.reports = ReportsClient(self._client)
+        self._client = Client(endpoint, api_key)
         self.assets = AssetsClient(self._client)
-        self.cost = CostClient(self._client)
-        self.usage = UsageClient(self._client)
+        self.reports = ReportingClient(self._client)
+        self.sso = SsoClient(self._client)
