@@ -3,6 +3,7 @@ import os
 
 from cloudhealth import exceptions
 from .assets import AssetsClient
+from .perspectives import PerspectivesClient
 from .reports import ReportingClient
 from .sso import SsoClient
 
@@ -57,5 +58,6 @@ class CloudHealth():
 
         self._client = Client(endpoint, api_key)
         self.assets = AssetsClient(self._client)
+        self.perspectives = PerspectivesClient(self._client)
         self.reports = ReportingClient(self._client)
         self.sso = SsoClient(self._client)
