@@ -16,23 +16,23 @@ git clone https://github.com/albertonarro/cloudhealth-client.git
 ## Python Usage
 
 ```python
-from cloudhealth-client import client
+>>> from cloudhealth import client
+>>> ch = client.CloudHealth(api_key='Ali23melAS$E#@$Im3lsim1!')
 
-ch = client.CloudHealth(api_key='Ali23melAS$E#@$Im3lsim1!')
+# List all queryable assets
+>>> ch.assets.list()
+['AwsInstanceType', 'AwsAvailabilityZone', 'AwsAccount', ... ]
 
-# Get AWS instance usage for yesterday (currently only AWS is supported)
-ch.usage.get(resource_type='instance')
-...
-
-79.79166666666666
-
-# Get current cost of all service in all AWS-Accounts
-ch.cost.get_current(account_type='AWS-Account')
-...
-
-9676.619999999908
-
-```
+# List Reports of Specific Type
+>>> ch.reports.list_by_type('cost')
+{
+  'links': {
+    'cost/billing_rules': {'href': 'https://chapi.cloudhealthtech.com/olap_reports/cost/billing_rules'}, 
+    'cost/current': {'href': 'https://chapi.cloudhealthtech.com/olap_reports/cost/current'}, 
+    ...
+    ...
+  }
+}
 
 
 ## Testing

@@ -15,7 +15,7 @@ class ReportingClient():
         return reports
 
 
-    def list_type(self, report_type, org_id=None):
+    def list_by_type(self, report_type, org_id=None):
         uri = f'{self.uri}/{report_type}'
         params = [('org_id', org_id)]
 
