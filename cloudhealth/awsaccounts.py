@@ -38,3 +38,10 @@ class AwsAccountsClient():
         accounts = self.client.query(uri, method='GET', params=params)
 
         return accounts
+
+    def get(self, account_id):
+        uri = f'/v1/aws_accounts/{account_id}'
+
+        account = self.client.query(uri, method='GET')
+
+        return account
