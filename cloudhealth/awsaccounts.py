@@ -57,3 +57,9 @@ class AwsAccountsClient():
         return account
 
 
+    def delete(self, account_id):
+		uri = f'/v1/aws_accounts/{account_id}'
+
+        response = self.client.query(uri, method='DELETE')
+
+        return response
