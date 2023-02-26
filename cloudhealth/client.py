@@ -6,6 +6,7 @@ from .assets import AssetsClient
 from .perspectives import PerspectivesClient
 from .reports import ReportingClient
 from .sso import SsoClient
+from .awsaccounts import AwsAccountsClient
 
 class Client():
     def __init__(self,
@@ -61,3 +62,4 @@ class CloudHealth():
         self.perspectives = PerspectivesClient(self._client)
         self.reports = ReportingClient(self._client)
         self.sso = SsoClient(self._client)
+        self.awsaccounts = AwsAccountsClient(self._client)

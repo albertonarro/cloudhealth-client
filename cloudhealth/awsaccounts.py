@@ -20,11 +20,21 @@ class AwsAccountsClient():
 			"cloudtrail": cloudtrail,
 			"tags": tags
         }
-
-		account = self.client.query(
+        account = self.client.query(
             uri, method='POST', data=json.dumps(data), params=params
         )
 
-		return account
+        return account
 
 
+    def list(self, page=1, per_page=30, org_id=''):
+        uri = '/v1/aws_accounts'
+        params = [
+            ('org_id', org_id),
+            ('per_page', per_page),
+            ('page',page)
+        ]
+
+        accounts = self.client.query(uri, method='GET', params=params)
+
+        return accounts
