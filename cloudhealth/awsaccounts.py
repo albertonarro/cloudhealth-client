@@ -39,9 +39,21 @@ class AwsAccountsClient():
 
         return accounts
 
+
     def get(self, account_id):
         uri = f'/v1/aws_accounts/{account_id}'
 
         account = self.client.query(uri, method='GET')
 
         return account
+
+
+    def update(self, account_id, account_attributes):
+        uri = f'/v1/aws_accounts/{account_id}'
+        data = account_attributes
+
+        account = self.client.query(uri, method='PUT', data=json.dumps(data))
+
+        return account
+
+
