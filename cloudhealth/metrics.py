@@ -1,3 +1,4 @@
+import json
 from . import exceptions
 
 class MetricsClient():
@@ -29,3 +30,18 @@ class MetricsClient():
 
         return metrics
 
+
+    def upload(self, payload, dryrun=False, org_id=None):
+        uri = '/metrics/v1'
+        params = [('dryrun', dryrun)]
+
+        if org_id:
+            params.append(('org_id', org_id))
+
+        data = payload
+
+        response = self.client.query(
+            uri, method='POST', data=json.dumps(data), params=params
+        )
+
+        return response
