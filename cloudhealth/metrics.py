@@ -7,7 +7,7 @@ class MetricsClient():
         self.client = client
 
     def get(self, asset, granularity=None, _from=None, _to=None,
-            time_range=None, page=None, per_page=None org_id=None):
+            time_range=None, page=None, per_page=None, org_id=None):
         uri = '/metrics/v1'
         params = [('asset', asset)]
 

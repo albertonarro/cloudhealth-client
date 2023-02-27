@@ -25,7 +25,7 @@ class ReportingClient():
 
 
     def get_data(self, report_type, report_id, dimensions=[], 
-            measures=[], interval='', filters=[], org_id='', collapse_null_arrays=True,
+            measures=[], interval='monthly', filters=[], org_id='', collapse_null_arrays=True,
             no_cache=True):
         uri = f'{self.uri}/{report_type}/{report_id}'
 
