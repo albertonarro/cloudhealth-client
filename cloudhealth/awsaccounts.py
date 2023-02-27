@@ -58,11 +58,12 @@ class AwsAccountsClient():
 
 
     def delete(self, account_id):
-		uri = f'/v1/aws_accounts/{account_id}'
+        uri = f'/v1/aws_accounts/{account_id}'
 
         response = self.client.query(uri, method='DELETE')
 
         return response
+
 
     def get_external_id(self, account_id):
         uri = f'/v1/aws_accounts/{account_id}/generate_external_id'
