@@ -24,7 +24,7 @@ class OrganizationClient():
 
 
     def update(self, org_id, description):
-        uri = '/v2/organizations/{org_id}'
+        uri = f'/v2/organizations/{org_id}'
         data = { "description": description }
 
         organization = self.client.query(
@@ -35,7 +35,7 @@ class OrganizationClient():
 
 
     def delete(self, org_id):
-        uri = '/v2/organizations/{org_id}'
+        uri = f'/v2/organizations/{org_id}'
 
         response = self.client.query(uri, method='DELETE')
 
@@ -53,6 +53,31 @@ class OrganizationClient():
 
         organization = self.client.query(
             uri, method='POST', data=json.dumps(data)
+        )
+
+        return organization
+
+    def assign_accounts(self, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None):
+        uri = f'/v2/organizations/{org_id}'
+        data = { "accounts":"add" }
+
+        if not (aws_accounts or 
+                azure_subscriptions or 
+                gcp_compute_projects or
+                data_center_accounts):
+            raise exceptions.CloudHealthError('You must pass at least one of the parameters.')
+
+        if aws_accounts:
+            data['aws_accounts'] = aws_accounts
+        if azure_subscriptions:
+            data['azure_subscriptions'] = azure_subscriptions
+        if gcp_compute_projects:
+            data['gcp_compute_projects'] = gcp_compute_projects
+        if data_center_accounts:
+            data['data_center_accounts'] = data_center_accounts
+
+        organization = self.client.query(
+            uri, method='PUT', data=json.dumps(data)
         )
 
         return organization
