@@ -57,6 +57,7 @@ class OrganizationClient():
 
         return organization
 
+
     def assign_accounts(self, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None, replace=False):
         if replace:
             uri = f'/v2/organizations/{org_id}'
@@ -85,3 +86,22 @@ class OrganizationClient():
         )
 
         return organization
+
+
+    def get_accounts(self, org_id, cloud_account, page=None, per_page=30, query=None, sort=None, is_down=False):
+        uri = f'/v2/organizations/{org_id}/{cloud_account}'
+        params = [
+            ('per_page', per_page),
+            ('is_down', is_down)
+        ]
+
+        if page:
+            params.append(('page', page))
+        if query:
+            params.append(('query', query))
+        if sort:
+            params.append(('sort', sort))
+
+        accounts = self.client.query(uri, method='GET', params=params)
+
+        return accounts
