@@ -1,3 +1,4 @@
+import json
 from . import exceptions
 
 class OrganizationClient():
@@ -20,3 +21,12 @@ class OrganizationClient():
 
         return organizations
 
+    def update(self, org_id, description):
+        uri = '/v2/organizations/{org_id}')
+        data = { "description": description }
+
+        organization = self.client.query(
+            uri, method='PUT', data=json.dumps(data)
+        )
+
+        return organization
