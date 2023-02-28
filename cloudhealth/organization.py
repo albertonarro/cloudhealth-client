@@ -64,7 +64,7 @@ class OrganizationClient():
         else:
             uri = f'/v2/organizations/{org_id}/accounts'
 
-        data = { "accounts":"add" }
+        data = { "accounts": "add" }
 
         if not (aws_accounts or 
                 azure_subscriptions or 
@@ -107,10 +107,42 @@ class OrganizationClient():
         return accounts
 
 
-    def get_allowed_accounts(self, org_id, account_type):
+    def get_allowed_accounts(self, org_id, account_type, per_page=30, page=None):
         uri = f'/v2/organizations/{org_id}/available_accounts'
-        params = [('type', account_type)]
+        params = [
+            ('type', account_type),
+            ('per_page', per_page)
+        ]
+
+        if page:
+            params.append(('page', page))
 
         accounts = self.client.query(uri, method='GET', params=params)
+
+        return accounts
+
+
+    def remove_assigned_accounts(self, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None):
+        uri = f'/v2/organizations/{org_id}/accounts'
+        data = { "accounts": "remove" }
+
+        if not (aws_accounts or
+                azure_subscriptions or
+                gcp_compute_projects or
+                data_center_accounts):
+            raise exceptions.CloudHealthError('You must pass at least one of the parameters.')
+
+        if aws_accounts:
+            data['aws_accounts'] = aws_accounts
+        if azure_subscriptions:
+            data['azure_subscriptions'] = azure_subscriptions
+        if gcp_compute_projects:
+            data['gcp_compute_projects'] = gcp_compute_projects
+        if data_center_accounts:
+            data['data_center_accounts'] = data_center_accounts
+
+        accounts = self.client.query(
+            uri, method='PATCH', data=json.dumps(data)
+        )
 
         return accounts
