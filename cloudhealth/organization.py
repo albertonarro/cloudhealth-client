@@ -22,7 +22,7 @@ class OrganizationClient():
         return organizations
 
     def update(self, org_id, description):
-        uri = '/v2/organizations/{org_id}')
+        uri = '/v2/organizations/{org_id}'
         data = { "description": description }
 
         organization = self.client.query(
@@ -30,3 +30,10 @@ class OrganizationClient():
         )
 
         return organization
+
+    def delete(self, org_id):
+        uri = '/v2/organizations/{org_id}'
+
+        response = self.client.query(uri, method='DELETE')
+
+        return response
