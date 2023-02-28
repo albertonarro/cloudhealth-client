@@ -57,8 +57,12 @@ class OrganizationClient():
 
         return organization
 
-    def assign_accounts(self, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None):
-        uri = f'/v2/organizations/{org_id}'
+    def assign_accounts(self, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None, replace=False):
+        if replace:
+            uri = f'/v2/organizations/{org_id}'
+        else:
+            uri = f'/v2/organizations/{org_id}/accounts'
+
         data = { "accounts":"add" }
 
         if not (aws_accounts or 
