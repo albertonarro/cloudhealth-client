@@ -88,8 +88,8 @@ class OrganizationClient():
         return organization
 
 
-    def get_accounts(self, org_id, cloud_account, page=None, per_page=30, query=None, sort=None, is_down=False):
-        uri = f'/v2/organizations/{org_id}/{cloud_account}'
+    def get_accounts(self, org_id, account_type, page=None, per_page=30, query=None, sort=None, is_down=False):
+        uri = f'/v2/organizations/{org_id}/{account_type}'
         params = [
             ('per_page', per_page),
             ('is_down', is_down)
@@ -101,6 +101,15 @@ class OrganizationClient():
             params.append(('query', query))
         if sort:
             params.append(('sort', sort))
+
+        accounts = self.client.query(uri, method='GET', params=params)
+
+        return accounts
+
+
+    def get_allowed_accounts(self, org_id, account_type):
+        uri = f'/v2/organizations/{org_id}/available_accounts'
+        params = [('type', account_type)]
 
         accounts = self.client.query(uri, method='GET', params=params)
 
