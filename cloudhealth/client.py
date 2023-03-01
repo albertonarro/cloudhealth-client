@@ -15,13 +15,16 @@ from .policies import PoliciesClient
 class Client():
     def __init__(self,
                  endpoint,
-                 api_key):
+                 api_key,
+                 proxies=None):
         self.endpoint = endpoint
         self.api_key = api_key
         self.headers = {
             'Authorization': f'Bearer {self.api_key}',
             'Accept': 'application/json'
         }
+        self.proxies = proxies
+
 
     def query(self,
             uri,
@@ -44,7 +47,8 @@ class Client():
             url,
             data=data,
             params=params,
-            headers=headers)
+            headers=headers,
+            proxies=self.proxies)
 
         if response.status_code not in [200, 201, 204]:
             error = response.json().get('error')
@@ -54,14 +58,14 @@ class Client():
 
 
 class CloudHealth():
-    def __init__(self, endpoint='https://chapi.cloudhealthtech.com/', api_key=None):
+    def __init__(self, endpoint='https://chapi.cloudhealthtech.com/', api_key=None, proxies=None):
         if not api_key:
             try:
                 api_key = os.environ['CLOUDHEALTH_API_KEY']
             except KeyError:
                 raise exceptions.CloudHealthError('API_KEY not set')
 
-        self._client = Client(endpoint, api_key)
+        self._client = Client(endpoint, api_key, proxies=proxies)
         self.assets = AssetsClient(self._client)
         self.perspectives = PerspectivesClient(self._client)
         self.reports = ReportingClient(self._client)
