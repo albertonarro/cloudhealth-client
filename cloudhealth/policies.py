@@ -18,3 +18,19 @@ class PoliciesClient():
         policies = self.client.query(uri, method='GET', params=params)
 
         return policies
+
+
+    def list_blocks(self, policy_id, client_api_id=None, page=1, per_page=30):
+        uri = f'/v1/policies/{policy_id}/policy_blocks'
+        params = [
+            ('page', page),
+            ('per_page', per_page)
+        ]
+
+        if client_api_id:
+            params.append(('api_key', client_api_id))
+
+        policy_blocks = self.client.query(uri, method='GET', params=params)
+
+        return policy_blocks
+
