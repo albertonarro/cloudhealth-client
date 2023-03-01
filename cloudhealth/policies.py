@@ -34,3 +34,18 @@ class PoliciesClient():
 
         return policy_blocks
 
+
+    def list_violations(self, policy_id, policy_block_id, client_api_id=None, page=1, per_page=30, count=1):
+        uri = f'/v1/policies/{policy_id}/policy_blocks/{policy_block_id}/violations'
+        params = [
+            ('page', page),
+            ('per_page', per_page),
+            ('count', count)
+        ]
+
+        if client_api_id:
+            params.append(('api_key', client_api_id))
+
+        policy_violations = self.client.query(uri, method='GET', params=params)
+
+        return policy_violations
