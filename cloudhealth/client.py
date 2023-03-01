@@ -9,6 +9,7 @@ from .sso import SsoClient
 from .awsaccounts import AwsAccountsClient
 from .metrics import MetricsClient
 from .organization import OrganizationClient
+from .tags import TagsClient
 
 class Client():
     def __init__(self,
@@ -67,3 +68,4 @@ class CloudHealth():
         self.awsaccounts = AwsAccountsClient(self._client)
         self.metrics = MetricsClient(self._client)
         self.organization = OrganizationClient(self._client)
+        self.tags = TagsClient(self._client)
