@@ -170,7 +170,7 @@ class OrganizationClient():
         return assignment
 
 
-   def remove_assigned_accounts(self, org_id, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None):
+    def remove_assigned_accounts(self, org_id, aws_accounts=None, azure_subscriptions=None, gcp_compute_projects=None, data_center_accounts=None):
         uri = f'/v2/organizations/{org_id}/accounts'
         data = { "accounts": "remove" }
 
