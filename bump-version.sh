@@ -10,8 +10,7 @@ fi
 
 if [[ "$VERSION" =~ $SEMVER_REGEX ]]
 then
-    sed -i "s/version=.*/version='$VERSION',/g" setup.py
-    sed -i "s/version = .*/version = \"$VERSION\",/g" pyproject.toml
+    sed -i "s/version = .*/version = $VERSION,/g" setup.cfg
     echo Files modified successfully, version bumped to $VERSION
 else
     echo 'Tag must match the semver scheme X.Y.Z[-PRERELEASE][+BUILD]. See https://semver.org/'
