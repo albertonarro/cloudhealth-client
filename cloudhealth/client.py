@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 
 from cloudhealth import exceptions
 from .assets import AssetsClient
@@ -11,6 +12,7 @@ from .metrics import MetricsClient
 from .organization import OrganizationClient
 from .tags import TagsClient
 from .policies import PoliciesClient
+from .partner import PartnerClient
 
 class Client():
     def __init__(self,
@@ -45,7 +47,7 @@ class Client():
         response = requests.request(
             method,
             url,
-            data=data,
+            data=json.dumps(data),
             params=params,
             headers=headers,
             proxies=self.proxies)
@@ -75,3 +77,4 @@ class CloudHealth():
         self.organization = OrganizationClient(self._client)
         self.tags = TagsClient(self._client)
         self.policies = PoliciesClient(self._client)
+        self.partner = PartnerClient(self._client)
