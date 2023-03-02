@@ -173,4 +173,14 @@ class PartnerClient():
         return statement
 
 
+    def connect_govcloud_account(self, client_api_id, govcloud_acct_id, commercial_acct_id):
+        uri = '/api/v1/govcloud_linkages'
+        params = [('client_api_id', client_api_id)]
+        data = {
+            "govcloud_acct_id": govcloud_acct_id,
+            "commercial_acct_id": commercial_acct_id
+        }
 
+        linkage = self.client.query(uri, method='POST', params=params, data=data)
+
+        return linkage
