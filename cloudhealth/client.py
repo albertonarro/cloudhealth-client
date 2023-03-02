@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 
 from cloudhealth import exceptions
 from .assets import AssetsClient
@@ -46,7 +47,7 @@ class Client():
         response = requests.request(
             method,
             url,
-            data=data,
+            data=json.dumps(data),
             params=params,
             headers=headers,
             proxies=self.proxies)

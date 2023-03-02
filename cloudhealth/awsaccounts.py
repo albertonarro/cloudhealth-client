@@ -1,4 +1,3 @@
-import json
 from . import exceptions
 
 class AwsAccountsClient():
@@ -22,7 +21,7 @@ class AwsAccountsClient():
 			"tags": tags
         }
         account = self.client.query(
-            uri, method='POST', data=json.dumps(data), params=params
+            uri, method='POST', data=data, params=params
         )
 
         return account
@@ -53,7 +52,7 @@ class AwsAccountsClient():
         uri = f'/v1/aws_accounts/{account_id}'
         data = account_attributes
 
-        account = self.client.query(uri, method='PUT', data=json.dumps(data))
+        account = self.client.query(uri, method='PUT', data=data)
 
         return account
 
