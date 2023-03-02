@@ -184,3 +184,12 @@ class PartnerClient():
         linkage = self.client.query(uri, method='POST', params=params, data=data)
 
         return linkage
+
+
+    def list_linkages(self, client_api_id):
+        uri = '/api/v1/govcloud_linkages'
+        params = [('client_api_id', client_api_id)]
+
+        linkages = self.client.query(uri, method='GET', params=params)
+
+        return linkages
