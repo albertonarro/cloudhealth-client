@@ -125,4 +125,14 @@ class PartnerClient():
 
         return response
 
+    
+    def list_customers(self, page=1, per_page=30):
+        uri = f'/v1/customers'
+        params = [
+            ('page', page),
+            ('per_page', per_page)
+        ]
 
+        customers = self.client.query(uri, method='GET', params=params)
+
+        return customers
