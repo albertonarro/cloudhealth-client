@@ -13,3 +13,14 @@ class PartnerClient():
 
         return report
 
+    def list_assets(self, client_api_id, name):
+        uri = '/api/search.json'
+        params = [
+            ('api_version', 2),
+            ('client_api_id', client_api_id),
+            ('name', name)
+        ]
+
+        assets = self.client.query(uri, method='GET', params=params)
+
+        return assets
