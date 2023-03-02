@@ -110,9 +110,19 @@ class PartnerClient():
         return customer
 
 
+    def get_customer(self, client_api_id):
+        uri = f'/v1/customers/{client_api_id}'
+
+        customer = self.client.query(uri, method='GET')
+
+        return customer
+
+
     def delete_customer(self, client_api_id):
         uri = f'/v1/customers/{client_api_id}'
         
         response = self.client.query(uri, method='DELETE')
 
         return response
+
+
