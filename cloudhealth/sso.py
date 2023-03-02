@@ -1,4 +1,3 @@
-import json
 from . import exceptions
 
 class SsoClient():
@@ -24,7 +23,7 @@ class SsoClient():
         }
 
         response = self.client.query(
-            uri, method='PUT', data=json.dumps(data), params=params
+            uri, method='PUT', data=data, params=params
         )
 
         return response
@@ -63,7 +62,7 @@ class SsoClient():
         data = {"pending_domain_name": pending_domain_name}
 
         response = self.client.query(
-			uri, method='PUT', data=json.dumps(data), params=params
+			uri, method='PUT', data=data, params=params
 		)
 
         return response

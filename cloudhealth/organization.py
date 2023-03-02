@@ -1,4 +1,3 @@
-import json
 from . import exceptions
 
 class OrganizationClient():
@@ -28,7 +27,7 @@ class OrganizationClient():
         data = { "description": description }
 
         organization = self.client.query(
-            uri, method='PUT', data=json.dumps(data)
+            uri, method='PUT', data=data
         )
 
         return organization
@@ -52,7 +51,7 @@ class OrganizationClient():
             data['parent_organization_id'] = parent_organization_id
 
         organization = self.client.query(
-            uri, method='POST', data=json.dumps(data)
+            uri, method='POST', data=data
         )
 
         return organization
@@ -78,7 +77,7 @@ class OrganizationClient():
             data['data_center_accounts'] = data_center_accounts
 
         organization = self.client.query(
-            uri, method='PUT', data=json.dumps(data)
+            uri, method='PUT', data=data
         )
 
         return organization
@@ -138,7 +137,7 @@ class OrganizationClient():
             data['data_center_accounts'] = data_center_accounts
 
         assignment = self.client.query(
-            uri, method='PATCH', data=json.dumps(data)
+            uri, method='PATCH', data=data
         )
 
         return assignment
@@ -164,7 +163,7 @@ class OrganizationClient():
             data['data_center_accounts'] = data_center_accounts
 
         assignment = self.client.query(
-            uri, method='PUT', data=json.dumps(data)
+            uri, method='PUT', data=data
         )
 
         return assignment
@@ -190,7 +189,7 @@ class OrganizationClient():
             data['data_center_accounts'] = data_center_accounts
 
         accounts = self.client.query(
-            uri, method='PATCH', data=json.dumps(data)
+            uri, method='PATCH', data=data
         )
 
         return accounts
