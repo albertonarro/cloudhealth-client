@@ -136,3 +136,22 @@ class PartnerClient():
         customers = self.client.query(uri, method='GET', params=params)
 
         return customers
+
+
+    def get_statement(self, client_api_id, status=None, billing_period=None, page=1, per_page=30):
+        uri = '/v1/customer_statements'
+        params = [
+            ('client_api_id', client_api_id),
+            ('page', page),
+            ('per_page', per_page)
+        ]
+
+        if status:
+            params.append(('status', status))
+        if billing_period:
+            params.append(('billing_period', billing_period))
+
+        statement = self.client.query(uri, method='GET', params=params)
+
+        return statement
+
